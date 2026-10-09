@@ -80,6 +80,8 @@ public class HomeFurniturePanel extends JPanel implements DialogView {
   private JSpinner                depthSpinner;
   private JLabel                  heightLabel;
   private JSpinner                heightSpinner;
+  private JLabel                  volumeLabel;
+  private JSpinner                volumeSpinner;
   private JCheckBox               keepProportionsCheckBox;
   private NullableCheckBox        mirroredModelCheckBox;
   private JRadioButton            defaultColorAndTextureRadioButton;
@@ -464,7 +466,35 @@ public class HomeFurniturePanel extends JPanel implements DialogView {
           }
         });
     }
-    
+/*
+    if (controller.isPropertyEditable(HomeFurnitureController.Property.VOLUME)) {
+      // Create height label and its spinner bound to HEIGHT controller property
+      this.volumeLabel = new JLabel(SwingTools.getLocalizedLabelText(preferences, HomeFurniturePanel.class,
+              "volumeLabel.text", unitName));
+      final NullableSpinner.NullableSpinnerLengthModel volumeSpinnerModel =
+              new NullableSpinner.NullableSpinnerLengthModel(preferences, minimumLength, maximumLength);
+      this.volumeSpinner = new NullableSpinner(volumeSpinnerModel);
+      final PropertyChangeListener volumeChangeListener = new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent ev) {
+          Float volume = controller.getVolume();
+          volumeSpinnerModel.setNullable(volume == null);
+          volumeSpinnerModel.setLength(volume);
+          if (volume != null) {
+            volumeSpinnerModel.setMinimumLength(Math.min(volume, minimumLength));
+          }
+        }
+      };
+      volumeChangeListener.propertyChange(null);
+      controller.addPropertyChangeListener(HomeFurnitureController.Property.VOLUME, volumeChangeListener);
+      volumeSpinnerModel.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent ev) {
+          controller.removePropertyChangeListener(HomeFurnitureController.Property.VOLUME, volumeChangeListener);
+          controller.setVolume();
+          controller.addPropertyChangeListener(HomeFurnitureController.Property.VOLUME, volumeChangeListener);
+        }
+      });
+    }
+    */
     if (controller.isPropertyEditable(HomeFurnitureController.Property.PROPORTIONAL)) {
       // Create keep proportions check box bound to PROPORTIONAL controller property
       this.keepProportionsCheckBox = new JCheckBox(SwingTools.getLocalizedLabelText(preferences,
