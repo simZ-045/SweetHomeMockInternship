@@ -53,7 +53,7 @@ public class HomeFurnitureController implements Controller {
    * The properties that may be edited by the view associated to this controller. 
    */
   public enum Property {ICON, NAME, NAME_VISIBLE, DESCRIPTION, PRICE, X, Y, ELEVATION, ANGLE_IN_DEGREES, BASE_PLAN_ITEM, 
-      WIDTH, DEPTH,  HEIGHT, PROPORTIONAL, COLOR, PAINT, SHININESS, VISIBLE, MODEL_MIRRORED, LIGHT_POWER, 
+      WIDTH, DEPTH,  HEIGHT, VOLUME, PROPORTIONAL, COLOR, PAINT, SHININESS, VISIBLE, MODEL_MIRRORED, LIGHT_POWER,
       RESIZABLE, DEFORMABLE, TEXTURABLE}
   
   /**
@@ -91,6 +91,7 @@ public class HomeFurnitureController implements Controller {
   private Float              depth;
   private Float              proportionalDepth;
   private Float              height;
+  private Float              volume;
   private Float              proportionalHeight;
   private boolean            proportional;
   private Integer            color;
@@ -183,6 +184,7 @@ public class HomeFurnitureController implements Controller {
       addPropertyChangeListener(Property.WIDTH, sizeChangeListener);
       addPropertyChangeListener(Property.DEPTH, sizeChangeListener);
       addPropertyChangeListener(Property.HEIGHT, sizeChangeListener);
+      addPropertyChangeListener(Property.VOLUME, sizeChangeListener);
     }
     return this.modelMaterialsController;
   }
@@ -242,6 +244,7 @@ public class HomeFurnitureController implements Controller {
       setWidth(null, true, false);
       setDepth(null, true, false);
       setHeight(null, true, false);
+      setVolume();
       setColor(null);
       if (textureController != null) {
         textureController.setTexture(null);
@@ -396,6 +399,7 @@ public class HomeFurnitureController implements Controller {
         }
       }
       setHeight(height, true, false);
+      setVolume();
 
       List<HomePieceOfFurniture> selectedFurnitureWithoutGroups = getFurnitureWithoutGroups(selectedFurniture);
       HomePieceOfFurniture firstPieceExceptGroup = selectedFurnitureWithoutGroups.get(0);
@@ -596,6 +600,7 @@ public class HomeFurnitureController implements Controller {
   public boolean isPropertyEditable(Property property) {
     switch (property) {
       case DESCRIPTION :
+        return true;
       case PRICE :
         return false;
       case LIGHT_POWER :
@@ -964,6 +969,15 @@ public class HomeFurnitureController implements Controller {
       this.proportional = proportional;
       this.propertyChangeSupport.firePropertyChange(Property.PROPORTIONAL.name(), oldProportional, proportional);
     }
+  }
+  public void setVolume() {
+    this.volume = this.height * this.width * this.depth;
+  }
+  /**
+   * Returns the edited Volume.
+   */
+  public Float getVolume() {
+    return this.volume;
   }
 
   /**
