@@ -2008,8 +2008,39 @@ public class PlanComponent extends JComponent implements PlanView, Scrollable, P
    * that makes it fill <code>pageFormat</code> imageable size if this attribute is <code>null</code>.
    */
   public int print(Graphics g, PageFormat pageFormat, int pageIndex) {
+    List<Level> levels = new ArrayList<Level>();
+    for (Level level : this.home.getLevels()) {   // in the home's level order
+      if (level.isViewable()) {
+        levels.add(level);
+      }
+    }
+    if (levels.isEmpty()) {
+      // Home without viewable levels: single plan page as before
+      return printSelectedLevel(g, pageFormat, pageIndex);
+    }
+    if (pageIndex < 0 || pageIndex >= levels.size()) {
+      return NO_SUCH_PAGE;
+    }
+    Level savedLevel = this.home.getSelectedLevel();
+    try {
+      this.home.setSelectedLevel(levels.get(pageIndex));
+      // Each level is printed on its own page, so ask for its first page
+      return printSelectedLevel(g, pageFormat, 0);
+    } finally {
+      this.home.setSelectedLevel(savedLevel);   // restored even if rendering fails
+    }
+  }
+/*
+ * Helper for print(), where print loops the levels
+ * actually prints the levels
+ */
+  private int printSelectedLevel(Graphics g, PageFormat pageFormat, int pageIndex) {
     List<Selectable> printedItems = getPaintedItems(); 
     Rectangle2D printedItemBounds = getItemsBounds(g, printedItems);
+    if (printedItemBounds == null && this.home.getSelectedLevel() != null) {
+      // A viewable level without items still gets a (blank) plan page
+      printedItemBounds = new Rectangle2D.Float(0, 0, 1000, 1000);
+    }
     if (printedItemBounds != null) {
       double imageableX = pageFormat.getImageableX();
       double imageableY = pageFormat.getImageableY();

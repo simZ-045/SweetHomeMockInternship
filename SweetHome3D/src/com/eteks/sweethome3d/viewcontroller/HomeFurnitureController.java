@@ -244,7 +244,6 @@ public class HomeFurnitureController implements Controller {
       setWidth(null, true, false);
       setDepth(null, true, false);
       setHeight(null, true, false);
-      setVolume();
       setColor(null);
       if (textureController != null) {
         textureController.setTexture(null);
@@ -399,7 +398,6 @@ public class HomeFurnitureController implements Controller {
         }
       }
       setHeight(height, true, false);
-      setVolume();
 
       List<HomePieceOfFurniture> selectedFurnitureWithoutGroups = getFurnitureWithoutGroups(selectedFurniture);
       HomePieceOfFurniture firstPieceExceptGroup = selectedFurnitureWithoutGroups.get(0);
@@ -969,9 +967,6 @@ public class HomeFurnitureController implements Controller {
       this.proportional = proportional;
       this.propertyChangeSupport.firePropertyChange(Property.PROPORTIONAL.name(), oldProportional, proportional);
     }
-  }
-  public void setVolume() {
-    this.volume = this.height * this.width * this.depth;
   }
   /**
    * Returns the edited Volume.
